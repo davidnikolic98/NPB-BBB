@@ -1,0 +1,54 @@
+header {
+  justify-content: left;
+  background-color:  #122d42;
+  border: 0%;
+  display: flex;
+}
+
+header ul {
+  padding-inline-start: 20px;
+}
+
+header li {
+  display: inline;
+  margin-right: 20px;
+  padding-left: 30px;
+  font-size: large;
+  font-weight: bolder;
+  color: #3e6b89;
+}
+
+header nav{
+  margin-left: 10px;
+}
+
+a{
+  text-decoration: none;
+  color: #3e6b89;
+  font-size: large;
+  font-weight: bolder;
+  margin-right: 5px;
+}
+
+a:hover{
+  color:white;
+}
+
+
+#search{ 
+  margin-left: 20%;
+}
+
+#logo{
+  height: 100px;
+  width: 200px;
+}
+
+#top{
+  display: flex;
+  flex-direction: row;
+}
+
+text{
+  color: white;
+}
