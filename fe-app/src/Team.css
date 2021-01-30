@@ -1,4 +1,107 @@
 table, th, td {
-    border: 1px solid black;
-    padding: 5px;
-  }
+  border-collapse: collapse;
+  margin: 0;
+  
+}
+table{
+  margin: 0 auto;
+}
+thead{
+  border-bottom: 1px solid rgb(220,220,220);
+ 
+}
+tr{
+  border-bottom: 1px solid rgb(220,220,220);
+}
+tbody tr:hover{
+  background-color: #89583e;
+  color: white;
+}
+tbody tr:hover a{
+  background-color: #89583e;
+  color: white;
+}
+th, td{
+  width: 100px;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  padding: 5px;
+}
+
+.div-team{
+  
+  display: flex;
+  height: 1000px;
+  background-color: rgb(246,246,246);
+  margin: 0 auto;
+  
+  /*background: linear-gradient(to right,rgba(255,255,255,1), rgba(255,255,255,.2)), url("https://i.pinimg.com/originals/ea/3d/ed/ea3ded724065aac1b5ce578e39601a61.png") 140% -100px  no-repeat;
+  background-size: 700px 700px;*/
+  
+}
+.team-logo{
+  margin-left: 100px;
+  width: 150px;
+  height: 150px;
+  
+  opacity: 1;
+}
+.team{
+  width: 100%;
+  height: 1000px;
+  margin-top: 100px;
+  
+  opacity: 1;
+  
+}
+.team h1{
+  margin-left: 100px;
+}
+.team-logo-info{
+  display: flex;
+  height: 250px;
+}
+.right-team-logo{
+  object-fit: cover;
+  object-position: 0 -100px;
+  opacity: 0.4;
+  width: 400px;
+  height: 600px;
+}
+.players{
+  width: 1200px;
+  margin: 0 auto;
+  height: 220px;
+ background-color: white;
+ padding-top: 20px;
+ border: 1px solid rgb(220,220,220);
+ border-radius: 8px;
+}
+#label{
+  width: 1160px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0px 20px 20px 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgb(220,220,220);
+}
+.players-stat{
+  width: 1200px;
+  margin: 20px auto;
+  height: 300px;
+ background-color: white;
+ padding-top: 20px;
+ border: 1px solid rgb(220,220,220);
+ border-radius: 8px;
+}
+.div-team a{
+  color: black;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 0;
+}
+.div-team a:hover{
+  
+}
+

@@ -37,6 +37,34 @@ namespace NEO4J.Controllers
         }
 
         [HttpGet]
+        [Route("getAllPlayers/{sort}")]
+        public async Task<IActionResult> GetAllTeams(string sort)
+        {
+
+            IAsyncSession session = driver.AsyncSession(o => o.WithDatabase("nbp"));
+            var data = await session.RunAsync(
+                        "match (p:Player) return p.Name,p.PER,p.PPG,p.APG,p.RPG,p.BLK,p.STL,p.FGpct,p.TPpct,p.FTpct ORDER BY p." + sort + " DESC").Result.ToListAsync();
+            var temp = new List<Object>();
+            for (int i = 0; i < data.Count; i++)
+            {
+                var result = new
+                {
+                    Name = data[i].Values["p.Name"].As<string>(),
+                    PER = data[i].Values["p.PER"].As<double>(),
+                    APG = data[i].Values["p.APG"].As<double>(),
+                    PPG = data[i].Values["p.PPG"].As<double>(),
+                    RPG = data[i].Values["p.RPG"].As<double>(),
+                    STL = data[i].Values["p.STL"].As<double>(),
+                    BLK = data[i].Values["p.BLK"].As<double>(),
+                    FGpct = data[i].Values["p.FGpct"].As<double>(),
+                    TPpct = data[i].Values["p.TPpct"].As<double>(),
+                    FTpct = data[i].Values["p.FTpct"].As<double>()
+                };
+                temp.Add(result);
+            }
+            return Ok(temp);
+        }
+        [HttpGet]
         [Route("getPlayerByName/{playerName}")]
         public  async Task<IActionResult> GetPlayerByName([FromRoute(Name = "playerName")] string playerName)
         {
@@ -62,7 +90,7 @@ namespace NEO4J.Controllers
         }
         [HttpGet]
         [Route("getAllTeams")]
-        public async Task<IActionResult> GetAllTeams()
+        public async Task<IActionResult> GetAllPlayers()
         {
 
             IAsyncSession session = driver.AsyncSession(o => o.WithDatabase("nbp"));
@@ -116,15 +144,15 @@ namespace NEO4J.Controllers
             return Ok(t);
         }
         [HttpGet]
-        [Route("getWinrate")]
-        public async Task<IActionResult> GetWinrate()
+        [Route("getWinrate/{season}")]
+        public async Task<IActionResult> GetWinrate(string sesason)
         {
 
             IAsyncSession session = driver.AsyncSession(o => o.WithDatabase("nbp"));
-            var data = await session.RunAsync("MATCH (t:Team)-[w:PLAYED_IN]->(g:Game)" +
+            var data = await session.RunAsync("MATCH (t:Team{Season:\"" + "2020" + "\"})-[w:PLAYED_IN]->(g:Game)" +
                 " RETURN t.Name AS TEAM,t.Season AS SEASON, COUNT(w.Differential) AS TOTAL, SUM(CASE WHEN w.Differential > 0 then 1 else 0 END)" +
                 " AS TOTAL_WIN, COUNT(w.Differential)-SUM(CASE WHEN w.Differential > 0 then 1 else 0 END) AS TOTAL_LOSS," +
-                " round( (toFloat(SUM( CASE WHEN w.Differential > 0 then 1 else 0 END))/ COUNT(w.Differential))*100,2) as WIN_PERCENTAGE ORDER BY t.Season,WIN_PERCENTAGE DESC").Result.ToListAsync();
+                " round( (toFloat(SUM( CASE WHEN w.Differential > 0 then 1 else 0 END))/ COUNT(w.Differential))*100,2) as WIN_PERCENTAGE ORDER BY t.Season DESC,WIN_PERCENTAGE DESC").Result.ToListAsync();
             var temp= new List<Object>();
             for (int i = 0; i < data.Count; i++)
             {

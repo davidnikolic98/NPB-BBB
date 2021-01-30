@@ -27,7 +27,7 @@ export default function Header()
             </Link>
           </li> 
           <li>
-            <Link to="/">
+            <Link to="/fantasy">
               Fantasy
             </Link>
           </li> 
@@ -36,7 +36,7 @@ export default function Header()
             <input type="text" />
           </li>
           <li>
-            <Link to="/home" >
+            <Link to="/" >
               <img src={logo} id="logo"/>
             </Link>
           </li>

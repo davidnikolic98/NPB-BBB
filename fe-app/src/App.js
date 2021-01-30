@@ -13,7 +13,8 @@ import Teams from "./Teams";
 import Team from "./Team";
 import Players from "./Players";
 import Home from "./Home";
-import Player from "./Player"
+import Player from "./Player";
+import Fantasy from "./Fantasy";
 
 
 function App() {
@@ -37,6 +38,9 @@ function App() {
             </Route>
             <Route path="/player/:playerName">
               <Player />
+            </Route>
+            <Route path="/fantasy">
+              <Fantasy />
             </Route>
           </Switch>
         </main>

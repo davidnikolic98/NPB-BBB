@@ -1,0 +1,48 @@
+.div-player{
+    width: 100%;
+    height: 800px;
+    
+}
+.player-image-name{
+    width: 100%;
+    display: flex;
+    height: 350px;
+    background:linear-gradient(rgba(62,107,137,0.95), rgba(62,107,137,0.95)), url("https://cutewallpaper.org/21/cool-basketball-logo/Basketball-Logo-Black-And-White-Free-download-best-.png") 100px -250px no-repeat;
+    background-size: 700px 700px;
+}
+.player-image-name img{
+   margin-left: 150px;
+    height: 350px;
+}
+.player-image-name div{
+    font-family: fantasy;
+    
+    font-size: 60px;
+    color: white;
+    margin-left: 50px;
+    margin-top: 150px;
+     height: 200px;
+ }
+ .player-statistics{
+     width: 100%;
+    
+     background-color: #122d42;
+ }
+ .player-statistics table{
+     width: 100%;
+ }
+ .player-statistics table, th, td {
+    border-collapse: collapse;
+    margin: 0;
+    
+  }
+  .player-statistics th{
+    height: 90px;
+    border: 1px solid rgb(62,107,137);
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    padding: 5px;
+    color: white;
+  }
+  

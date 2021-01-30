@@ -1,6 +1,7 @@
 import React from "react"
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import "./Player.css";
 
 export default function Player()
 {
@@ -23,72 +24,45 @@ export default function Player()
 
 
     return (
-        <div>
-            <h1>{player.name}</h1>
+        <div className="div-player">
+        <div className="player-image-name">
+            <img src={"../Image/Players/"+player.name?.split('2')[0]+'.png'}/>
+            <div>{player.name?.split('2')?.[0]}<br/>{"2"+player.name?.split('2')?.[1]}{player.name?.split('2')[2]?"2"+player.name.split('2')[2]:""}</div>
+        </div>
+        <div className="player-statistics">
             <table>
-                <thead>
-                    <tr>
-                        <th>
-                            PointsPer Game
-                        </th>
-                        <th>
-                            APG
-                        </th>
-                        <th>
-                            RPG
-                        </th>
-                        <th>
-                            BLK
-                        </th>
-                        <th>
-                            STL
-                        </th>
-                        <th>
-                            FG%
-                        </th>
-                        <th>
-                            FT%
-                        </th>
-                        <th>
-                            TP%
-                        </th>
-                        <th>
-                            PER
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                        <tr key={player.name}>
-                            <td>
-                                {player.ppg}
-                            </td>
-                            <td>
-                                {player.apg}
-                            </td>
-                            <td>
-                                {player.rpg}
-                            </td>
-                            <td>
-                                {player.blk}
-                            </td>
-                            <td>
-                                {player.stl}
-                            </td>
-                            <td>
-                                {player.fGpct}
-                            </td>
-                            <td>
-                                {player.fTpct}
-                            </td>
-                            <td>
-                                {player.tPpct}
-                            </td>
-                            <td>
-                                {player.per}
-                            </td>
-                        </tr>
-                </tbody>
+                <tr>
+                    <th>
+                        PPG<br/><br/>{player.ppg}
+                    </th>
+                    <th>
+                        APG<br/><br/>{player.apg}
+                    </th>
+                    <th>
+                        RPG<br/><br/>{player.rpg}
+                    </th>
+                    <th>
+                        BLK<br/><br/>{player.blk}
+                    </th>
+                    <th>
+                        STL<br/><br/>{player.stl}
+                    </th>
+                    <th>
+                        FG%<br/><br/>{player.fGpct}
+                    </th>
+                    <th>
+                        FT%<br/><br/>{player.fTpct}
+                    </th>
+                    <th>
+                        TP%<br/><br/>{player.tPpct}
+                    </th>
+                    <th>
+                        PER<br/><br/>{player.per}
+                    </th>
+                </tr>
             </table>
         </div>
+        
+    </div>
     )
 }
