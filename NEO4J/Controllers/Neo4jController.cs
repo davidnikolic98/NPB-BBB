@@ -89,13 +89,13 @@ namespace NEO4J.Controllers
             return Ok(p);
         }
         [HttpGet]
-        [Route("getAllTeams")]
-        public async Task<IActionResult> GetAllPlayers()
+        [Route("getAllTeams/{season}")]
+        public async Task<IActionResult> GetAllPlayers(string season)
         {
 
             IAsyncSession session = driver.AsyncSession(o => o.WithDatabase("nbp"));
             var data = await session.RunAsync(
-                        "match (t:Team) return t.Name,t.Season ORDER BY t.Season DESC").Result.ToListAsync();
+                        "match (t:Team{Season:\"" + season + "\"}) return t.Name,t.Season ORDER BY t.Season DESC").Result.ToListAsync();
             var temp = new List<Object>();
             for (int i = 0; i < data.Count; i++)
             {
@@ -145,11 +145,11 @@ namespace NEO4J.Controllers
         }
         [HttpGet]
         [Route("getWinrate/{season}")]
-        public async Task<IActionResult> GetWinrate(string sesason)
+        public async Task<IActionResult> GetWinrate(string season)
         {
 
             IAsyncSession session = driver.AsyncSession(o => o.WithDatabase("nbp"));
-            var data = await session.RunAsync("MATCH (t:Team{Season:\"" + "2020" + "\"})-[w:PLAYED_IN]->(g:Game)" +
+            var data = await session.RunAsync("MATCH (t:Team{Season:\"" + season + "\"})-[w:PLAYED_IN]->(g:Game)" +
                 " RETURN t.Name AS TEAM,t.Season AS SEASON, COUNT(w.Differential) AS TOTAL, SUM(CASE WHEN w.Differential > 0 then 1 else 0 END)" +
                 " AS TOTAL_WIN, COUNT(w.Differential)-SUM(CASE WHEN w.Differential > 0 then 1 else 0 END) AS TOTAL_LOSS," +
                 " round( (toFloat(SUM( CASE WHEN w.Differential > 0 then 1 else 0 END))/ COUNT(w.Differential))*100,2) as WIN_PERCENTAGE ORDER BY t.Season DESC,WIN_PERCENTAGE DESC").Result.ToListAsync();
