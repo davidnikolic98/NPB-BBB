@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Podaci\\7. sem\\Napredne baze podataka\\neo\\neo4j\\NEO4J.csproj": {}
+    "C:\\Users\\dukip\\Desktop\\NPB-BBB\\NEO4J\\NEO4J.csproj": {}
   },
   "projects": {
-    "D:\\Podaci\\7. sem\\Napredne baze podataka\\neo\\neo4j\\NEO4J.csproj": {
+    "C:\\Users\\dukip\\Desktop\\NPB-BBB\\NEO4J\\NEO4J.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Podaci\\7. sem\\Napredne baze podataka\\neo\\neo4j\\NEO4J.csproj",
+        "projectUniqueName": "C:\\Users\\dukip\\Desktop\\NPB-BBB\\NEO4J\\NEO4J.csproj",
         "projectName": "NEO4J",
-        "projectPath": "D:\\Podaci\\7. sem\\Napredne baze podataka\\neo\\neo4j\\NEO4J.csproj",
-        "packagesPath": "C:\\Users\\DavidNikolic\\.nuget\\packages\\",
-        "outputPath": "D:\\Podaci\\7. sem\\Napredne baze podataka\\neo\\neo4j\\obj\\",
+        "projectPath": "C:\\Users\\dukip\\Desktop\\NPB-BBB\\NEO4J\\NEO4J.csproj",
+        "packagesPath": "C:\\Users\\dukip\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\dukip\\Desktop\\NPB-BBB\\NEO4J\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\DavidNikolic\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\dukip\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +22,8 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://api.nuget.org/v3/index.json": {}
+          "https://api.nuget.org/v3/index.json": {},
+          "https://www.nuget.org/api/v2": {}
         },
         "frameworks": {
           "net5.0": {
@@ -89,7 +90,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
         }
       }
     }

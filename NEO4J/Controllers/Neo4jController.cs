@@ -173,9 +173,84 @@ namespace NEO4J.Controllers
         public async Task<IActionResult> Chemistry([FromRoute(Name = "playerName1")] string playerName1, [FromRoute(Name = "playerName2")] string playerName2)
         {
             IAsyncSession session = driver.AsyncSession(o => o.WithDatabase("nbp"));
-            var data = await session.RunAsync("MATCH(p1: Player{Name:\"" + playerName1 + "\"}),(p2: Player{Name:\"" + playerName2 + "\"})" +
-                " WHERE p1.Name<> p2.Name MERGE (p1)-[c: CHEMISTRY{ Strength: round(p2.PER * 1.5 + p2.APG * 2.66,2)}]->(p2) return p1.Name,c.Strength,p2.Name").Result.ToListAsync();
+            var data = await session.RunAsync("MATCH(p1: Player{Name:\"" + playerName1 + "\"})-[u1:USED_IN]->(f1:Fantasy)," +
+                "(p2: Player{Name:\"" + playerName2 + "\"})-[u2:USED_IN]->(f2:Fantasy)" +
+                "MERGE (f1)-[c: CHEMISTRY]->(f2) ON CREATE SET c.Strength = round(p2.PER * 1.5 + p2.APG * 2.66,2) ON MATCH SET c.Strength= round(p2.PER * 1.5 + p2.APG * 2.66,2) return f1.Name as Name1,c.Strength as Strength,f2.Name as Name2").Result.ToListAsync();
             return Ok(data);
+        }
+        [HttpPost]
+        [Route("CreateFantasyTeam")]
+        public async Task<IActionResult> CreateFantasyTeam([FromBody] FTeam t)
+        {
+            var data = new List<Neo4j.Driver.IRecord>();
+            double rating = 0;
+            IAsyncSession session = driver.AsyncSession(o => o.WithDatabase("nbp"));
+            for (int i = 0; i < t.Players.Count; i++)
+            {
+                for (int j = 0; j < t.Players.Count; j++)
+                {
+                    if (i != j)
+                    {
+                        data = await session.RunAsync("MATCH(p1: Player{Name:\"" + t.Players[i] + "\"})-[u1:USED_IN]->(f1:Fantasy)," +
+                       "(p2: Player{Name:\"" + t.Players[j] + "\"})-[u2:USED_IN]->(f2:Fantasy)" +
+                       "MERGE (f1)-[c: CHEMISTRY]->(f2) ON CREATE SET c.Strength = round(p2.PER * 1.5 + p2.APG * 2.66,2) ON MATCH SET c.Strength= round(p2.PER * 1.5 + p2.APG * 2.66,2) return f1.Name as Name1,c.Strength as Strength,f2.Name as Name2").Result.ToListAsync();
+                        rating += data[0].Values["Strength"].As<double>();
+
+                        data = await session.RunAsync("MATCH(p1: Player{Name:\"" + t.Players[i] + "\"})-[r1:PLAYED_FOR]->(t1:Team)-[w:PLAYED_IN]->(g:Game)," +
+                       "(p2: Player{Name:\"" + t.Players[j] + "\"})-[r2:PLAYED_FOR]->(t2:Team)" +
+                       "return CASE WHEN t1.Name = t2.Name then" +
+                       "(round((toFloat(SUM(CASE WHEN w.Differential > 0 then 1 else 0 END))/ COUNT(w.Differential))*100,2))"+
+                       "WHEN t1.Name<> t2.Name then 0 END AS WIN_PERCENTAGE").Result.ToListAsync();
+                        double tmp = data[0].Values["WIN_PERCENTAGE"].As<double>();
+                        if (tmp < 50)
+                            rating -= tmp;
+                        else rating += tmp;
+
+                    }
+                }
+            }
+
+            data = await session.RunAsync("CREATE (f: FTeam{Name:\"" + t.Name + "\",Creator:\"" + t.Creator + "\",Rating:" + rating + "," +
+                "PG:\"" + t.Players[0]+ "\"," +
+                "SG:\"" + t.Players[1] + "\"," +
+                "SF:\"" + t.Players[2] + "\"," +
+                "PF:\"" + t.Players[3] + "\"," +
+                "C:\"" + t.Players[4] + "\"})" +
+                "return f").Result.ToListAsync();
+
+            return Ok();
+        }
+        [HttpGet]
+        [Route("getAllFTeams")]
+        public async Task<IActionResult> GetAllFTeams()
+        {
+
+            IAsyncSession session = driver.AsyncSession(o => o.WithDatabase("nbp"));
+            var data = await session.RunAsync(
+                        "match (t:FTeam) return t.Name,t.Creator,t.Rating,t.PG,t.SG,t.SF,t.PF,t.C ORDER BY t.Rating DESC").Result.ToListAsync();
+            var temp = new List<FTeam>();
+            for (int i = 0; i < data.Count; i++)
+            {
+                var result = new FTeam()
+                {
+                    Name = data[i].Values["t.Name"].As<string>(),
+                    Creator = data[i].Values["t.Creator"].As<string>(),
+                    Rating = data[i].Values["t.Rating"].As<double>(),
+                    PG = data[i].Values["t.PG"].As<string>(),
+                    SG = data[i].Values["t.SG"].As<string>(),
+                    SF = data[i].Values["t.SF"].As<string>(),
+                    PF = data[i].Values["t.PF"].As<string>(),
+                    C = data[i].Values["t.C"].As<string>(),
+                    Players = new List<String>()
+                };
+                result.Players.Add(result.PG);
+                result.Players.Add(result.SG);
+                result.Players.Add(result.SF);
+                result.Players.Add(result.PF);
+                result.Players.Add(result.C);
+                temp.Add(result);
+            }
+            return Ok(temp);
         }
     }
 }
