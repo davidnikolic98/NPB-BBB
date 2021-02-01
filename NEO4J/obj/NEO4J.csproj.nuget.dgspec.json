@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\dukip\\Desktop\\NPB-BBB\\NEO4J\\NEO4J.csproj": {}
+    "C:\\Users\\dukip\\Desktop\\New folder\\NPB-BBB\\NEO4J\\NEO4J.csproj": {}
   },
   "projects": {
-    "C:\\Users\\dukip\\Desktop\\NPB-BBB\\NEO4J\\NEO4J.csproj": {
+    "C:\\Users\\dukip\\Desktop\\New folder\\NPB-BBB\\NEO4J\\NEO4J.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\dukip\\Desktop\\NPB-BBB\\NEO4J\\NEO4J.csproj",
+        "projectUniqueName": "C:\\Users\\dukip\\Desktop\\New folder\\NPB-BBB\\NEO4J\\NEO4J.csproj",
         "projectName": "NEO4J",
-        "projectPath": "C:\\Users\\dukip\\Desktop\\NPB-BBB\\NEO4J\\NEO4J.csproj",
+        "projectPath": "C:\\Users\\dukip\\Desktop\\New folder\\NPB-BBB\\NEO4J\\NEO4J.csproj",
         "packagesPath": "C:\\Users\\dukip\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\dukip\\Desktop\\NPB-BBB\\NEO4J\\obj\\",
+        "outputPath": "C:\\Users\\dukip\\Desktop\\New folder\\NPB-BBB\\NEO4J\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\dukip\\AppData\\Roaming\\NuGet\\NuGet.Config",

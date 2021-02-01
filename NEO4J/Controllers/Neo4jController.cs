@@ -66,7 +66,7 @@ namespace NEO4J.Controllers
         }
         [HttpGet]
         [Route("getPlayerByName/{playerName}")]
-        public  async Task<IActionResult> GetPlayerByName([FromRoute(Name = "playerName")] string playerName)
+        public async Task<IActionResult> GetPlayerByName([FromRoute(Name = "playerName")] string playerName)
         {
 
             IAsyncSession session = driver.AsyncSession(o => o.WithDatabase("nbp"));
@@ -121,7 +121,7 @@ namespace NEO4J.Controllers
                 Name = data[0].Values["t.Name"].As<string>(),
             };
             t.Players = new List<Player>();
-           for(int i=0;i<data.Count; i++)
+            for (int i = 0; i < data.Count; i++)
             {
                 Player p = new Player()
                 {
@@ -140,7 +140,7 @@ namespace NEO4J.Controllers
                 t.Players.Add(p);
             }
 
-       
+
             return Ok(t);
         }
         [HttpGet]
@@ -153,7 +153,7 @@ namespace NEO4J.Controllers
                 " RETURN t.Name AS TEAM,t.Season AS SEASON, COUNT(w.Differential) AS TOTAL, SUM(CASE WHEN w.Differential > 0 then 1 else 0 END)" +
                 " AS TOTAL_WIN, COUNT(w.Differential)-SUM(CASE WHEN w.Differential > 0 then 1 else 0 END) AS TOTAL_LOSS," +
                 " round( (toFloat(SUM( CASE WHEN w.Differential > 0 then 1 else 0 END))/ COUNT(w.Differential))*100,2) as WIN_PERCENTAGE ORDER BY t.Season DESC,WIN_PERCENTAGE DESC").Result.ToListAsync();
-            var temp= new List<Object>();
+            var temp = new List<Object>();
             for (int i = 0; i < data.Count; i++)
             {
                 var result = new
@@ -199,7 +199,7 @@ namespace NEO4J.Controllers
                         data = await session.RunAsync("MATCH(p1: Player{Name:\"" + t.Players[i] + "\"})-[r1:PLAYED_FOR]->(t1:Team)-[w:PLAYED_IN]->(g:Game)," +
                        "(p2: Player{Name:\"" + t.Players[j] + "\"})-[r2:PLAYED_FOR]->(t2:Team)" +
                        "return CASE WHEN t1.Name = t2.Name then" +
-                       "(round((toFloat(SUM(CASE WHEN w.Differential > 0 then 1 else 0 END))/ COUNT(w.Differential))*100,2))"+
+                       "(round((toFloat(SUM(CASE WHEN w.Differential > 0 then 1 else 0 END))/ COUNT(w.Differential))*100,2))" +
                        "WHEN t1.Name<> t2.Name then 0 END AS WIN_PERCENTAGE").Result.ToListAsync();
                         double tmp = data[0].Values["WIN_PERCENTAGE"].As<double>();
                         if (tmp < 50)
@@ -211,7 +211,7 @@ namespace NEO4J.Controllers
             }
 
             data = await session.RunAsync("CREATE (f: FTeam{Name:\"" + t.Name + "\",Creator:\"" + t.Creator + "\",Rating:" + rating + "," +
-                "PG:\"" + t.Players[0]+ "\"," +
+                "PG:\"" + t.Players[0] + "\"," +
                 "SG:\"" + t.Players[1] + "\"," +
                 "SF:\"" + t.Players[2] + "\"," +
                 "PF:\"" + t.Players[3] + "\"," +
@@ -251,6 +251,56 @@ namespace NEO4J.Controllers
                 temp.Add(result);
             }
             return Ok(temp);
+        }
+        [HttpDelete]
+        [Route("DeleteFantasy/{teamName}/{creatorName}")]
+        public async Task<IActionResult> DeleteFantasy([FromRoute(Name = "teamName")] string teamName, [FromRoute(Name = "creatorName")] string creatorName)
+        {
+            IAsyncSession session = driver.AsyncSession(o => o.WithDatabase("nbp"));
+            var data = await session.RunAsync("MATCH(t: FTeam{Name:\"" + teamName + "\",Creator:\"" + creatorName + "\"})" +
+                "detach delete t").Result.ToListAsync();
+            return Ok(data);
+        }
+        [HttpPut]
+        [Route("UpdateFantasy")]
+        public async Task<IActionResult> UpdateFantasy([FromBody] FTeam t)
+        {
+            var data = new List<Neo4j.Driver.IRecord>();
+            double rating = 0;
+            IAsyncSession session = driver.AsyncSession(o => o.WithDatabase("nbp"));
+            for (int i = 0; i < t.Players.Count; i++)
+            {
+                for (int j = 0; j < t.Players.Count; j++)
+                {
+                    if (i != j)
+                    {
+                        data = await session.RunAsync("MATCH(p1: Player{Name:\"" + t.Players[i] + "\"})-[u1:USED_IN]->(f1:Fantasy)," +
+                       "(p2: Player{Name:\"" + t.Players[j] + "\"})-[u2:USED_IN]->(f2:Fantasy)" +
+                       "MERGE (f1)-[c: CHEMISTRY]->(f2) ON CREATE SET c.Strength = round(p2.PER * 1.5 + p2.APG * 2.66,2) ON MATCH SET c.Strength= round(p2.PER * 1.5 + p2.APG * 2.66,2) return f1.Name as Name1,c.Strength as Strength,f2.Name as Name2").Result.ToListAsync();
+                        rating += data[0].Values["Strength"].As<double>();
+
+                        data = await session.RunAsync("MATCH(p1: Player{Name:\"" + t.Players[i] + "\"})-[r1:PLAYED_FOR]->(t1:Team)-[w:PLAYED_IN]->(g:Game)," +
+                       "(p2: Player{Name:\"" + t.Players[j] + "\"})-[r2:PLAYED_FOR]->(t2:Team)" +
+                       "return CASE WHEN t1.Name = t2.Name then" +
+                       "(round((toFloat(SUM(CASE WHEN w.Differential > 0 then 1 else 0 END))/ COUNT(w.Differential))*100,2))" +
+                       "WHEN t1.Name<> t2.Name then 0 END AS WIN_PERCENTAGE").Result.ToListAsync();
+                        double tmp = data[0].Values["WIN_PERCENTAGE"].As<double>();
+                        if (tmp < 50)
+                            rating -= tmp;
+                        else rating += tmp;
+
+                    }
+                }
+            }
+            data = await session.RunAsync("MATCH(t: FTeam{Name:\"" + t.Name + "\",Creator:\"" + t.Creator + "\"})" +
+                "SET t.PG=\"" + t.Players[0]+"\"" +
+                 ",t.SG=\"" + t.Players[1] + "\"" +
+                 ",t.SF=\"" + t.Players[2] + "\"" +
+                 ",t.PF=\"" + t.Players[3] + "\"" +
+                 ",t.C=\"" + t.Players[4] + "\"" +
+                 ",t.Rating=" + rating).Result.ToListAsync();
+            t.Rating = rating;
+            return Ok(t);
         }
     }
 }
