@@ -220,6 +220,40 @@ namespace NEO4J.Controllers
 
             return Ok();
         }
+
+        [HttpGet]
+        [Route("getFTeams/{creatorName}")]
+        public async Task<IActionResult> GetFTeams(string creatorName)
+        {
+
+            IAsyncSession session = driver.AsyncSession(o => o.WithDatabase("nbp"));
+            var data = await session.RunAsync(
+                        "match (t:FTeam{Creator:\"" + creatorName + "\"}) return t.Name,t.Creator,t.Rating,t.PG,t.SG,t.SF,t.PF,t.C ORDER BY t.Rating DESC").Result.ToListAsync();
+            var temp = new List<FTeam>();
+            for (int i = 0; i < data.Count; i++)
+            {
+                var result = new FTeam()
+                {
+                    Name = data[i].Values["t.Name"].As<string>(),
+                    Creator = data[i].Values["t.Creator"].As<string>(),
+                    Rating = data[i].Values["t.Rating"].As<double>(),
+                    PG = data[i].Values["t.PG"].As<string>(),
+                    SG = data[i].Values["t.SG"].As<string>(),
+                    SF = data[i].Values["t.SF"].As<string>(),
+                    PF = data[i].Values["t.PF"].As<string>(),
+                    C = data[i].Values["t.C"].As<string>(),
+                    Players = new List<String>()
+                };
+                result.Players.Add(result.PG);
+                result.Players.Add(result.SG);
+                result.Players.Add(result.SF);
+                result.Players.Add(result.PF);
+                result.Players.Add(result.C);
+                temp.Add(result);
+            }
+            return Ok(temp);
+        }
+
         [HttpGet]
         [Route("getAllFTeams")]
         public async Task<IActionResult> GetAllFTeams()
@@ -252,6 +286,7 @@ namespace NEO4J.Controllers
             }
             return Ok(temp);
         }
+
         [HttpDelete]
         [Route("DeleteFantasy/{teamName}/{creatorName}")]
         public async Task<IActionResult> DeleteFantasy([FromRoute(Name = "teamName")] string teamName, [FromRoute(Name = "creatorName")] string creatorName)
@@ -261,6 +296,7 @@ namespace NEO4J.Controllers
                 "detach delete t").Result.ToListAsync();
             return Ok(data);
         }
+
         [HttpPut]
         [Route("UpdateFantasy")]
         public async Task<IActionResult> UpdateFantasy([FromBody] FTeam t)

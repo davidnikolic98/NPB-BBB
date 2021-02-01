@@ -6,11 +6,15 @@
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.3",
     "@testing-library/user-event": "^12.6.2",
+    "flatlist-react": "^1.5.0",
     "react": "^17.0.1",
+    "react-autocomplete": "^1.8.1",
     "react-dom": "^17.0.1",
+    "react-native-elements": "^3.1.0",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.1",
+    "react-scripts": "^4.0.1",
     "react-slidy": "^4.1.0",
+    "use-autocomplete": "^1.1.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
